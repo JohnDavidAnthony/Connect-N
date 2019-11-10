@@ -1,7 +1,7 @@
 # LEGEND: B is Blue pieces, R is Red pieces, - is Empty spaces
 import random
 
-class Board:
+class Game:
     def __init__(self, width, height):
         # Feel free to Change to whatever board size we want
         self.WIDTH = width
@@ -90,28 +90,28 @@ class Board:
         return True
 
 #Runs the game with Random piece placements
-def main():
-    b = Board(4, 4)
-    while True:
-        #Check for tie game
-        if b.checkTie():
-            print("Tie Game, No Winner")
-            break
-
-        #Blue makes a move and checks for win
-        b.submitMove(random.randint(0,3), "B")
-        if b.checkWin("B"):
-            print("Blue Wins!")
-            break
-
-        #Red makes a move and checks for win
-        b.submitMove(random.randint(0,3), "R")
-        if b.checkWin("R"):
-            print("Red Wins!")
-            break
-
-    b.printBoard()
-    print("Resetting Board")
-    b.resetBoard()
-
-main()
+# def main():
+#     b = Game(4, 4)
+#     while True:
+#         #Check for tie game
+#         if b.checkTie():
+#             print("Tie Game, No Winner")
+#             break
+#
+#         #Blue makes a move and checks for win
+#         b.submitMove(random.randint(0,3), "B")
+#         if b.checkWin("B"):
+#             print("Blue Wins!")
+#             break
+#
+#         #Red makes a move and checks for win
+#         b.submitMove(random.randint(0,3), "R")
+#         if b.checkWin("R"):
+#             print("Red Wins!")
+#             break
+#
+#     b.printBoard()
+#     print("Resetting Board")
+#     b.resetBoard()
+#
+# main()
