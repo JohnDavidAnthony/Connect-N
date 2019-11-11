@@ -105,6 +105,7 @@ class Board:
         :param width: Width of screen
         :param height: Height of screen
         """
+        
         square_width = int(width / len(self.board_arr))
         pygame.draw.rect(screen, self.BLUE, (0, square_width, width, height - square_width))
 

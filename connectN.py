@@ -11,32 +11,39 @@ def main():
     width = 7
     height = 6
     back = Game(width, height)
-    front = Visualization(800, 800)
-    front.board.board_arr = back.grid
+    front = Visualization(600, 600)
+    front.board = Board(width, height)
 
     while True:
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            exit()
         #Check for tie game
         if back.checkTie():
             print("Tie Game, No Winner")
             break
 
         #Blue makes a move and checks for win
-        back.submitMove(random.randint(0, width - 1), 1)
+        #back.submitMove(random.randint(0, width - 1), 1)
+        front.board.place_piece(random.randint(0, width - 1),1)
         front.update_screen()
         pygame.event.get()
         if back.checkWin(1):
             print("Red Wins!")
             break
+        time.sleep(.25)
 
         #Red makes a move and checks for win
-        back.submitMove(random.randint(0, width - 1), 2)
+        #back.submitMove(random.randint(0, width - 1), 2)
+
+        front.board.place_piece(random.randint(0, width - 1),2)
         front.update_screen()
         pygame.event.get()
         if back.checkWin(2):
             print("Yellow Wins!")
             break
 
-        time.sleep(.5)
+        time.sleep(.25)
 
 
 
