@@ -1,6 +1,7 @@
 from Visualization import Visualization, Board
 from Game import Game
 import random
+import numpy as np
 import pygame
 import time
 
@@ -18,14 +19,16 @@ def main():
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             exit()
+
         #Check for tie game
         if back.checkTie():
             print("Tie Game, No Winner")
             break
 
         #Blue makes a move and checks for win
-        #back.submitMove(random.randint(0, width - 1), 1)
-        front.board.place_piece(random.randint(0, width - 1),1)
+        back.submitMove(random.randint(0, width - 1), 1)
+
+        front.board.replace_board(np.rot90(np.array(back.grid), 3))
         front.update_screen()
         pygame.event.get()
         if back.checkWin(1):
@@ -33,10 +36,10 @@ def main():
             break
         time.sleep(.25)
 
-        #Red makes a move and checks for win
-        #back.submitMove(random.randint(0, width - 1), 2)
 
-        front.board.place_piece(random.randint(0, width - 1),2)
+        #Red makes a move and checks for win
+        back.submitMove(random.randint(0, width - 1), 2)
+        front.board.replace_board(np.rot90(np.array(back.grid), 3))
         front.update_screen()
         pygame.event.get()
         if back.checkWin(2):
