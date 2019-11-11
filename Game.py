@@ -1,4 +1,4 @@
-# LEGEND: B is Blue pieces, R is Red pieces, - is Empty spaces
+# LEGEND - 0: Empty, 1: Red, 2: Yellow
 import random
 
 class Game:
@@ -7,13 +7,18 @@ class Game:
         self.WIDTH = width
         self.HEIGHT = height
         # Creates empty board
-        self.grid = [['-' for y in range(self.WIDTH)] for x in range(self.HEIGHT)]
+        self.grid = [[0 for y in range(self.WIDTH)] for x in range(self.HEIGHT)]
 
     #Prints board in easily readable format
     def printBoard(self):
         for y in range(len(self.grid)):
             for x in range(len(self.grid[0])):
-                print(self.grid[y][x] + " ", end = ''),
+                if self.grid[y][x] == 1:
+                    print(str(self.grid[y][x]) + " ", end = ''),
+                elif self.grid[y][x] == 2:
+                    print(str(self.grid[y][x]) + " ", end = ''),
+                else:
+                    print("-" + " ", end = ''),
             print()
         print()
 
@@ -21,7 +26,7 @@ class Game:
     def resetBoard(self):
         for y in range(len(self.grid)):
             for x in range(len(self.grid[0])):
-                self.grid[y][x] = '-'
+                self.grid[y][x] = '0'
 
     def submitMove(self, column, colour):
         #Error checking move
@@ -29,13 +34,13 @@ class Game:
             print("Column out of range.")
             return
         #Checking if column is full
-        if self.grid[0][column] != '-':
+        if self.grid[0][column] != 0:
             print("Column " + str(column) + " is full, cannot place piece here")
             return
         #Error checking colours and printing out move
-        if colour == "B":
-            print("Inserting Blue piece in column: " + str(column))
-        elif colour == "R":
+        if colour == 2:
+            print("Inserting Yellow piece in column: " + str(column))
+        elif colour == 1:
             print("Inserting Red piece in column: " + str(column))
         else:
             print("Incorrect Colour, cannot place")
@@ -45,11 +50,11 @@ class Game:
         insertLevel = 0
         while insertLevel < self.HEIGHT:
             #Checking if bottom row is empty
-            if insertLevel == self.HEIGHT - 1 and self.grid[insertLevel][column] == '-':
+            if insertLevel == self.HEIGHT - 1 and self.grid[insertLevel][column] == 0:
                 self.grid[insertLevel][column] = colour
                 return
             #Checking if next row is full, if so place piece
-            if self.grid[insertLevel + 1][column] != '-':
+            if self.grid[insertLevel + 1][column] != 0:
                 self.grid[insertLevel][column] = colour
                 return
             #Increment insertLevel
@@ -85,13 +90,15 @@ class Game:
 
     def checkTie(self):
         for x in range(0, len(self.grid[0])):
-            if self.grid[0][x] == '-':
+            if self.grid[0][x] == 0:
                 return False
         return True
 
 #Runs the game with Random piece placements
 # def main():
-#     b = Game(4, 4)
+#     Width = 10
+#     Height = 15
+#     b = Game(10, 15)
 #     while True:
 #         #Check for tie game
 #         if b.checkTie():
@@ -99,15 +106,15 @@ class Game:
 #             break
 #
 #         #Blue makes a move and checks for win
-#         b.submitMove(random.randint(0,3), "B")
-#         if b.checkWin("B"):
-#             print("Blue Wins!")
+#         b.submitMove(random.randint(0,Width - 1), 1)
+#         if b.checkWin(1):
+#             print("Red Wins!")
 #             break
 #
 #         #Red makes a move and checks for win
-#         b.submitMove(random.randint(0,3), "R")
-#         if b.checkWin("R"):
-#             print("Red Wins!")
+#         b.submitMove(random.randint(0,Width - 1), 2)
+#         if b.checkWin(2):
+#             print("Yellow Wins!")
 #             break
 #
 #     b.printBoard()
