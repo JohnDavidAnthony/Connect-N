@@ -26,7 +26,7 @@ class Game:
     def resetBoard(self):
         for y in range(len(self.grid)):
             for x in range(len(self.grid[0])):
-                self.grid[y][x] = '0'
+                self.grid[y][x] = 0
 
     def submitMove(self, column, colour):
         #Error checking move
