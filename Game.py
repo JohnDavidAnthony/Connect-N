@@ -60,30 +60,30 @@ class Game:
             #Increment insertLevel
             insertLevel += 1
 
-    #THIS IS HARD CODED FOR CONNECT 4
+    #THIS IS HARD CODED FOR CONNECT 3
     def checkWin(self, colour):
         # Check horizontal spaces
         for y in range(self.HEIGHT):
-            for x in range(self.WIDTH - 3):
-                if self.grid[y][x] == colour and self.grid[y][x+1] == colour and self.grid[y][x+2] == colour and self.grid[y][x+3] == colour:
+            for x in range(self.WIDTH - 2):
+                if self.grid[y][x] == colour and self.grid[y][x+1] == colour and self.grid[y][x+2] == colour:
                     return True
 
         # Check vertical spaces
         for x in range(self.WIDTH):
-            for y in range(self.HEIGHT - 3):
-                if self.grid[y][x] == colour and self.grid[y+1][x] == colour and self.grid[y+2][x] == colour and self.grid[y+3][x] == colour:
+            for y in range(self.HEIGHT - 2):
+                if self.grid[y][x] == colour and self.grid[y+1][x] == colour and self.grid[y+2][x] == colour:
                     return True
 
         # Check / diagonal spaces
-        for x in range(self.WIDTH - 3):
-            for y in range(3, self.HEIGHT):
-                if self.grid[y][x] == colour and self.grid[y-1][x+1] == colour and self.grid[y-2][x+2] == colour and self.grid[y-3][x+3] == colour:
+        for x in range(self.WIDTH - 2):
+            for y in range(2, self.HEIGHT):
+                if self.grid[y][x] == colour and self.grid[y-1][x+1] == colour and self.grid[y-2][x+2] == colour:
                     return True
 
         # Check \ diagonal spaces
-        for x in range(self.WIDTH - 3):
-            for y in range(self.HEIGHT - 3):
-                if self.grid[y][x] == colour and self.grid[y+1][x+1] == colour and self.grid[y+2][x+2] == colour and self.grid[y+3][x+3] == colour:
+        for x in range(self.WIDTH - 2):
+            for y in range(self.HEIGHT - 2):
+                if self.grid[y][x] == colour and self.grid[y+1][x+1] == colour and self.grid[y+2][x+2] == colour:
                     return True
 
         return False
