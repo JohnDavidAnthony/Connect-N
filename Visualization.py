@@ -105,6 +105,7 @@ class Board:
         :param width: Width of screen
         :param height: Height of screen
         """
+        
         square_width = int(width / len(self.board_arr))
         pygame.draw.rect(screen, self.BLUE, (0, square_width, width, height - square_width))
 
@@ -126,9 +127,9 @@ class Board:
             current_y -= square_width
 
 
-v = Visualization(1000, 1000)
-v.board = Board(7, 6)
-
-while True:
-    v.update_screen()
-    pygame.event.get()
+# v = Visualization(1000, 1000)
+# v.board = Board(7, 6)
+#
+# while True:
+#     v.update_screen()
+#     pygame.event.get()
