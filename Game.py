@@ -38,19 +38,9 @@ class Game:
     def submitMove(self, column, colour):
         #Error checking move
         if column > (self.WIDTH - 1) or column < 0 :
-            print("Column out of range.")
             return
         #Checking if column is full
         if self.grid[0][column] != 0:
-            print("Column " + str(column) + " is full, cannot place piece here")
-            return
-        #Error checking colours and printing out move
-        if colour == 2:
-            print("Inserting Yellow piece in column: " + str(column))
-        elif colour == 1:
-            print("Inserting Red piece in column: " + str(column))
-        else:
-            print("Incorrect Colour, cannot place")
             return
 
         #Finding level to insert piece and changing the grid
@@ -67,30 +57,30 @@ class Game:
             #Increment insertLevel
             insertLevel += 1
 
-    #THIS IS HARD CODED FOR CONNECT 3
+    #THIS IS HARD CODED FOR CONNECT 4
     def checkWin(self, colour):
         # Check horizontal spaces
         for y in range(self.HEIGHT):
-            for x in range(self.WIDTH - 2):
-                if self.grid[y][x] == colour and self.grid[y][x+1] == colour and self.grid[y][x+2] == colour:
+            for x in range(self.WIDTH - 3):
+                if self.grid[y][x] == colour and self.grid[y][x+1] == colour and self.grid[y][x+2] == colour and self.grid[y][x+3] == colour:
                     return True
 
         # Check vertical spaces
         for x in range(self.WIDTH):
-            for y in range(self.HEIGHT - 2):
-                if self.grid[y][x] == colour and self.grid[y+1][x] == colour and self.grid[y+2][x] == colour:
+            for y in range(self.HEIGHT - 3):
+                if self.grid[y][x] == colour and self.grid[y+1][x] == colour and self.grid[y+2][x] == colour and self.grid[y+3][x] == colour:
                     return True
 
         # Check / diagonal spaces
-        for x in range(self.WIDTH - 2):
+        for x in range(self.WIDTH - 3):
             for y in range(2, self.HEIGHT):
-                if self.grid[y][x] == colour and self.grid[y-1][x+1] == colour and self.grid[y-2][x+2] == colour:
+                if self.grid[y][x] == colour and self.grid[y-1][x+1] == colour and self.grid[y-2][x+2] == colour and self.grid[y-3][x+3] == colour:
                     return True
 
         # Check \ diagonal spaces
-        for x in range(self.WIDTH - 2):
-            for y in range(self.HEIGHT - 2):
-                if self.grid[y][x] == colour and self.grid[y+1][x+1] == colour and self.grid[y+2][x+2] == colour:
+        for x in range(self.WIDTH - 3):
+            for y in range(self.HEIGHT - 3):
+                if self.grid[y][x] == colour and self.grid[y+1][x+1] == colour and self.grid[y+2][x+2] == colour and self.grid[y+3][x+3] == colour:
                     return True
 
         return False
@@ -100,32 +90,3 @@ class Game:
             if self.grid[0][x] == 0:
                 return False
         return True
-
-#Runs the game with Random piece placements
-# def main():
-#     Width = 10
-#     Height = 15
-#     b = Game(10, 15)
-#     while True:
-#         #Check for tie game
-#         if b.checkTie():
-#             print("Tie Game, No Winner")
-#             break
-#
-#         #Blue makes a move and checks for win
-#         b.submitMove(random.randint(0,Width - 1), 1)
-#         if b.checkWin(1):
-#             print("Red Wins!")
-#             break
-#
-#         #Red makes a move and checks for win
-#         b.submitMove(random.randint(0,Width - 1), 2)
-#         if b.checkWin(2):
-#             print("Yellow Wins!")
-#             break
-#
-#     b.printBoard()
-#     print("Resetting Board")
-#     b.resetBoard()
-#
-# main()
