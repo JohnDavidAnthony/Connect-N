@@ -34,6 +34,7 @@ def main():
     gamesPlayed = 0
     redWins = 0
     yellowWins = 0
+    turn = 1
     while gamesPlayed < 10:
         while True:
             #Press Left Arrow Key to exit game
@@ -48,25 +49,54 @@ def main():
                 resetGame()
                 break
 
-            #Blue makes a move and checks for win
-            playMove(1, random.randint(0, width - 1))
-            if back.checkWin(1):
-                print("Red Wins!")
-                gamesPlayed += 1
-                redWins += 1
-                resetGame()
-                break
-            time.sleep(.1)
+            if turn == 1:
+                #Blue makes a move and checks for win
+                playMove(1, random.choice(back.getLegalMoves()))
+                if back.checkWin(1):
+                    print("Red Wins!")
+                    gamesPlayed += 1
+                    redWins += 1
+                    resetGame()
+                    break
+                time.sleep(.1)
 
-            #Red makes a move and checks for win
-            playMove(2, random.randint(0, width - 1))
-            if back.checkWin(2):
-                print("Yellow Wins!")
-                gamesPlayed += 1
-                yellowWins += 1
-                resetGame()
-                break
-            time.sleep(.1)
+                #Red makes a move and checks for win
+                playMove(2, random.choice(back.getLegalMoves()))
+                if back.checkWin(2):
+                    print("Yellow Wins!")
+                    gamesPlayed += 1
+                    yellowWins += 1
+                    resetGame()
+                    break
+                time.sleep(.1)
+
+
+            #Red goes first
+            elif turn == 2:
+                #Red makes a move and checks for win
+                playMove(2, random.choice(back.getLegalMoves()))
+                if back.checkWin(2):
+                    print("Yellow Wins!")
+                    gamesPlayed += 1
+                    yellowWins += 1
+                    resetGame()
+                    break
+                time.sleep(.1)
+
+                #Blue makes a move and checks for win
+                playMove(1, random.choice(back.getLegalMoves()))
+                if back.checkWin(1):
+                    print("Red Wins!")
+                    gamesPlayed += 1
+                    redWins += 1
+                    resetGame()
+                    break
+                time.sleep(.1)
+
+        if turn == 1:
+            turn = 2
+        else:
+            turn = 1
 
     #Printing out results
     print("Red Wins: " + str(redWins))
