@@ -28,6 +28,13 @@ class Game:
             for x in range(len(self.grid[0])):
                 self.grid[y][x] = 0
 
+    def getLegalMoves(self):
+        legalMoves = []
+        for i in range(0, len(self.grid[0])):
+            if self.grid[0][i] == 0:
+                legalMoves.append(i)
+        return legalMoves
+
     def submitMove(self, column, colour):
         #Error checking move
         if column > (self.WIDTH - 1) or column < 0 :
