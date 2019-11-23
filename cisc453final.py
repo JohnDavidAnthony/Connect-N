@@ -2,7 +2,6 @@
 Q-values are approximated using a sequential neural network model
 After each move, a batch of past moves is sampled and the network is trained on these state-action-reward-next state pairs"""
 
-import tensorflow as tf
 from keras.models import Sequential
 from keras.layers import Input, Dense, Dropout
 from keras.optimizers import Adam
@@ -47,11 +46,26 @@ class DQNSolver:
         self.memory.append((state, action, reward, next_state, done))
 
     # Function to pick an action based on e-greedy action selection
-    def act(self, state):
+    def act(self, state, board):
         if np.random.rand() < self.exploration_rate:
             return random.randrange(self.action_space)
-        q_values = self.model.predict(np.expand_dims(state, 0), batch_size=1)
-        return np.argmax(q_values[0])
+
+        all_actions = list(range(0, board.WIDTH))
+
+        # get values of each action
+        action_arr = self.model.predict(np.expand_dims(state, 0), batch_size=1)
+        action_arr = action_arr[0]
+
+        # convert to lists to 2-tuple and sort by action value
+        action_tuples = list(zip(all_actions, action_arr))
+        action_tuples.sort(key=lambda x: x[1], reverse=True)
+
+        # Check to see if action is a legal action, if not do next best action
+        # legal moves
+        legal_moves = board.getLegalMoves()
+        for tuple in action_tuples:
+            if tuple[0] in legal_moves:
+                return tuple[0]
 
     # Function to train the neural network
     def experience_replay(self):
@@ -77,7 +91,7 @@ class DQNSolver:
 
 #WE ARE RED
 def connect4():
-    # Keep track of number of winns, losses and ties
+    # Keep track of number of wins, losses and ties
     winCounter = 0
     lossCounter = 0
     tieCounter = 0
@@ -116,7 +130,7 @@ def connect4():
 
             #Keep track of number of wins, losses and ties
             if win:
-              reward += 100
+              reward += 10
               terminal = True
               winCounter += 1
             elif tie:
@@ -128,7 +142,7 @@ def connect4():
               terminal = True
               lossCounter += 1
             else:
-              reward -= 1
+              #reward -= 1
               terminal = False
 
             state = state_next
@@ -138,7 +152,7 @@ def connect4():
                 break
 
             #Submit the next reinforcement learning agent action
-            action = dqn_solver.act(state)
+            action = dqn_solver.act(state, env)
 
             #Submit the action with the highest q-value - if that isn't available pick a random action
             if action in env.getLegalMoves():
@@ -188,11 +202,12 @@ def connect4():
     model_json = dqn_solver.model.to_json()
     with open("model.json", "w") as json_file:
         json_file.write(model_json)
+
     # serialize weights to HDF5
     dqn_solver.model.save_weights("model.h5")
     print("Saved model to disk")
 
-
 if __name__ == "__main__":
     connect4()
+
 
