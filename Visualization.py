@@ -13,6 +13,7 @@ class Visualization:
         self.width = screen_width
         self.height = screen_height
         self.board = Board(0, 0)  # Temporary Board
+        self.mouse_placed_at = None
 
     def update_board(self, board_arr):
         """
@@ -27,13 +28,12 @@ class Visualization:
         Prepares and then draws all components to screen
         """
         # Draw the piece under the mouse
+        pygame.event.get()
         x, y = pygame.mouse.get_pos()
-        left_click, _, _ = pygame.mouse.get_pressed()
-        self.board.draw_mouse_piece(self.screen, self.width, x, left_click)
+        self.mouse_placed_at = self.board.draw_mouse_piece(self.screen, self.width, x)
 
         # Draw the current state of the board
         self.board.draw_full_board(self.screen, self.width, self.height)
-
         pygame.display.update()
 
 
@@ -50,6 +50,8 @@ class Board:
         self.board_arr = np.zeros((num_cols, num_rows))
         self.current_player = 1
         self.clicked_last_frame = False
+        self.user_can_place = False
+        self.human = 2
 
     def place_piece(self, col, player):
         """
@@ -69,7 +71,7 @@ class Board:
         """
         self.board_arr = new_board
 
-    def draw_mouse_piece(self, screen, width, x, left_click):
+    def draw_mouse_piece(self, screen, width, x):
         """
         Draws the game piece indicating what column to place the piece in on mouse click
         :param screen: The screen to add the piece too
@@ -77,7 +79,10 @@ class Board:
         :param x: The x position of the mouse
         :param left_click: Boolean indicating if mouse was pressed that frame
         """
-        if self.current_player == 1:
+        placed_at = None
+        left_click, _, _ = pygame.mouse.get_pressed()
+
+        if self.human == 1:
             piece_colour = self.RED
         else:
             piece_colour = self.YELLOW
@@ -86,17 +91,25 @@ class Board:
         pygame.draw.rect(screen, self.BLACK, (0, 0, width, square_width))
         pygame.draw.circle(screen, piece_colour, (x, int(square_width / 2)), int(square_width / 2 - 5))
 
-        if left_click:
+        if left_click and self.user_can_place:
             for i in range(self.num_cols):
                 if (i + 1) * square_width > x >= i * square_width:
-                    self.place_piece(i, self.current_player)
-                    break
+                    if self.board_arr[i][self.num_rows-1] > 0:
+                        break
+                    else:
+                        self.place_piece(i, self.current_player)
+                        placed_at = i
+                        self.user_can_place = False
+                        # Set current player alternate between 1 and 2
+                        if self.current_player == 1:
+                            self.current_player = 2
+                        else:
+                            self.current_player = 1
+                        break
 
-            # Set current player alternate between 1 and 2
-            if self.current_player == 1:
-                self.current_player = 2
-            else:
-                self.current_player = 1
+
+
+        return placed_at
 
     def draw_full_board(self, screen, width, height):
         """
