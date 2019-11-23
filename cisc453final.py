@@ -38,7 +38,7 @@ class DQNSolver:
         self.model.add(Dropout(0.2))
         self.model.add(Dense(64, activation="relu"))
         self.model.add(Dropout(0.2))
-        self.model.add(Dense(self.action_space, activation="sigmoid"))
+        self.model.add(Dense(self.action_space, activation="softmax"))
         self.model.compile(loss="mse", optimizer=Adam(lr=LEARNING_RATE))
         self.model.summary()
 
@@ -50,7 +50,7 @@ class DQNSolver:
     def act(self, state):
         if np.random.rand() < self.exploration_rate:
             return random.randrange(self.action_space)
-        q_values = self.model.predict(np.expand_dims(state, 0), batch_size = 1)
+        q_values = self.model.predict(np.expand_dims(state, 0), batch_size=1)
         return np.argmax(q_values[0])
 
     # Function to train the neural network
@@ -183,6 +183,14 @@ def connect4():
             dqn_solver.experience_replay()
 
     print("Wins: ", winCounter, ", Losses: ", lossCounter, ", Ties: ", tieCounter)
+
+    # serialize model to JSON
+    model_json = dqn_solver.model.to_json()
+    with open("model.json", "w") as json_file:
+        json_file.write(model_json)
+    # serialize weights to HDF5
+    dqn_solver.model.save_weights("model.h5")
+    print("Saved model to disk")
 
 
 if __name__ == "__main__":
