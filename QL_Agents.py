@@ -1,4 +1,4 @@
-from cisc453final import *
+from training import *
 
 def create():
     width = 7
