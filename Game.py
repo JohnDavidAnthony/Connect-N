@@ -85,6 +85,7 @@ class Game:
 
         return False
 
+    # Check for ties
     def checkTie(self):
         for x in range(0, len(self.grid[0])):
             if self.grid[0][x] == 0:

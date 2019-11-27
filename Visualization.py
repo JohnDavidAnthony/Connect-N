@@ -140,9 +140,3 @@ class Board:
             current_y -= square_width
 
 
-# v = Visualization(1000, 1000)
-# v.board = Board(7, 6)
-#
-# while True:
-#     v.update_screen()
-#     pygame.event.get()

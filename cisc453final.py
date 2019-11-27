@@ -129,12 +129,6 @@ def connect4():
             np_grid = np.array(env.grid)
             state_next = np_grid.flatten()
 
-            #Visualize the random agent's move
-            if run == 0 or run == 999:
-                frontEnd.board.current_player = 2
-                frontEnd.board.place_piece(action, 2)
-                frontEnd.update_screen()
-
             #Check if it's a win or a tie
             win = env.checkWin(1)
             tie = env.checkTie()
@@ -171,12 +165,6 @@ def connect4():
 
             np_grid = np.array(env.grid)
             state_next = np_grid.flatten()
-
-            #Visualize the q-learning agent
-            if run == 0 or run == 999:
-                frontEnd.board.current_player = 1
-                frontEnd.board.place_piece(action, 1)
-                frontEnd.update_screen()
 
             #Check if it's a win or a tie
             win = env.checkWin(1)
