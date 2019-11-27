@@ -7,6 +7,7 @@ from keras.layers import Input, Dense, Dropout
 from keras.optimizers import Adam
 from collections import deque
 from Game import Game
+from Visualization import *
 import numpy as np
 import random
 
@@ -14,10 +15,10 @@ import random
 GAMMA = 0.9
 LEARNING_RATE = 0.1
 
-MEMORY_SIZE = 1000000 
+MEMORY_SIZE = 1000000
 BATCH_SIZE = 4
 
-#Decaying exporation - the longer we train, the less we explore
+#Decaying exploration - the longer we train, the less we explore
 EXPLORATION_MAX = 1.0
 EXPLORATION_MIN = 0.01
 EXPLORATION_DECAY = 0.995
@@ -84,6 +85,7 @@ class DQNSolver:
             q_values = self.model.predict(np.expand_dims(state, 0), batch_size = 1) # calculate q-values of current state
             q_values[0][action] = q_update
             self.model.fit(np.expand_dims(state, 0), q_values, batch_size = 1, verbose=0) # train model between predicted q-values and calculated q-values
+
         #Decrease exploration as time goes on
         self.exploration_rate *= EXPLORATION_DECAY
         self.exploration_rate = max(EXPLORATION_MIN, self.exploration_rate)
@@ -106,22 +108,32 @@ def connect4():
     dqn_solver = DQNSolver(len(state), action_space)
     run = 0
 
+    frontEnd = Visualization(500, 500)
+    frontEnd.board = Board(width, height)
+
     #Train for 1000 games
     while run < 1000:
         run += 1
-        env.resetBoard() #need to reset the connect 4 board 
+        env.resetBoard() #need to reset the connect 4 board
         np_grid = np.array(env.grid)
         state = np_grid.flatten() # our initial state is the reset connect 4 board
-        
+
         #Initialize reward to 0
         reward = 0
 
         while True:
-            
+
             #Submit the next random action
-            env.submitMove(random.choice(env.getLegalMoves()), 2)
+            action = random.choice(env.getLegalMoves())
+            env.submitMove(action, 2)
             np_grid = np.array(env.grid)
             state_next = np_grid.flatten()
+
+            #Visualize the random agent's move
+            if run == 0 or run == 999:
+                frontEnd.board.current_player = 2
+                frontEnd.board.place_piece(action, 2)
+                frontEnd.update_screen()
 
             #Check if it's a win or a tie
             win = env.checkWin(1)
@@ -146,7 +158,7 @@ def connect4():
               terminal = False
 
             state = state_next
-            
+
             #end game if we've reached an end state
             if terminal:
                 break
@@ -154,14 +166,17 @@ def connect4():
             #Submit the next reinforcement learning agent action
             action = dqn_solver.act(state, env)
 
-            #Submit the action with the highest q-value - if that isn't available pick a random action
-            if action in env.getLegalMoves():
-                env.submitMove(action, 1)
-            else:    
-                env.submitMove(random.choice(env.getLegalMoves()), 1)
+            #Submit the action returned
+            env.submitMove(action, 1)
 
             np_grid = np.array(env.grid)
             state_next = np_grid.flatten()
+
+            #Visualize the q-learning agent
+            if run == 0 or run == 999:
+                frontEnd.board.current_player = 1
+                frontEnd.board.place_piece(action, 1)
+                frontEnd.update_screen()
 
             #Check if it's a win or a tie
             win = env.checkWin(1)
@@ -188,11 +203,11 @@ def connect4():
             # add our agent's state-action-reward-next state to memory
             dqn_solver.remember(state, action, reward, state_next, terminal)
             state = state_next
-            
+
             # end game if we've reached an end state
-            if terminal:                
+            if terminal:
                 break
-            
+
             # train the network
             dqn_solver.experience_replay()
 
@@ -209,5 +224,3 @@ def connect4():
 
 if __name__ == "__main__":
     connect4()
-
-
